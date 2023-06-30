@@ -6,7 +6,7 @@ export class App {
     this.app = new PIXI.Application({
       width: width,
       height: height,
-      backgroundColor: 0xa7afbe,
+      backgroundColor: 0x3057E1,
     });
     PIXI.BaseTexture.defaultOptions.scaleMode = PIXI.SCALE_MODES.NEAREST;
     PIXI.settings.ROUND_PIXELS = false;
@@ -86,8 +86,8 @@ export class Resistance {
     this.content.x = x;
     this.content.y = y;
 
-    this.anchor1 = new Anchor(this.content.x, this.content.y + 5);
-    this.anchor2 = new Anchor(this.content.x + 38, this.content.y + 5);
+    this.anchor1 = new Anchor(this.content.x - 19, this.content.y);
+    this.anchor2 = new Anchor(this.content.x + 19, this.content.y);
   }
   move(x, y) {
     this.content.x += x / scale;
@@ -104,8 +104,8 @@ export class Resistance {
     scene.addChild(this.content);
   }
   moveAnchors() {
-    this.anchor1.move(this.content.x, this.content.y + 5);
-    this.anchor2.move(this.content.x + 38, this.content.y + 5);
+    this.anchor1.move(this.content.x - 19, this.content.y);
+    this.anchor2.move(this.content.x + 19, this.content.y);
   }
 }
 
@@ -124,8 +124,8 @@ export class Pile {
       this.content.x = x;
       this.content.y = y;
   
-      this.anchor1 = new Anchor(this.content.x, this.content.y + 19);
-      this.anchor2 = new Anchor(this.content.x + 38, this.content.y + 19);
+      this.anchor1 = new Anchor(this.content.x - 19, this.content.y);
+      this.anchor2 = new Anchor(this.content.x + 19, this.content.y);
     }
     move(x, y) {
       this.content.x += x / scale;
@@ -142,8 +142,8 @@ export class Pile {
       scene.addChild(this.content);
     }
     moveAnchors() {
-      this.anchor1.move(this.content.x, this.content.y + 19);
-      this.anchor2.move(this.content.x + 38, this.content.y + 19);
+      this.anchor1.move(this.content.x - 19, this.content.y);
+      this.anchor2.move(this.content.x + 19, this.content.y);
     }
   }
 
@@ -162,8 +162,8 @@ export class Pile {
       this.content.x = x;
       this.content.y = y;
   
-      this.anchor1 = new Anchor(this.content.x, this.content.y + 9);
-      this.anchor2 = new Anchor(this.content.x + 22, this.content.y + 9);
+      this.anchor1 = new Anchor(this.content.x - 11, this.content.y);
+      this.anchor2 = new Anchor(this.content.x + 11, this.content.y);
     }
     move(x, y) {
       this.content.x += x / scale;
@@ -180,8 +180,8 @@ export class Pile {
       scene.addChild(this.content);
     }
     moveAnchors() {
-      this.anchor1.move(this.content.x, this.content.y + 9);
-      this.anchor2.move(this.content.x + 22, this.content.y + 9);
+      this.anchor1.move(this.content.x - 11, this.content.y);
+      this.anchor2.move(this.content.x + 11, this.content.y);
     }
   }
 
