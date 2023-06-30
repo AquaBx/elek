@@ -30,14 +30,14 @@
                 e.preventDefault()
                 switch (e.which ){
                     case 1: selection = true;break;
-                    case 2: move = app;break;
+                    case 2: selected = app;pressed = app;break;
                     case 3 : {}
                 }
             }
 
             app.view.onpointerup = (e) => {
                 e.preventDefault()
-                move = false
+                selected = null
                 selection = false
             }
             app.view.onwheel = (e) => {
@@ -47,10 +47,20 @@
             }
 
             app.view.onpointermove = (e) => {
-                if (move){
-                    move.move(e.movementX,e.movementY)
+                if (selected){
+                    selected.move(e.movementX,e.movementY)
                 }
             }
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === "Delete"){
+                    app.scene.removeChild( pressed.content )
+                }
+                else if (e.key === "r"){
+                    pressed.rotate()
+                }
+            });
+
 
             app.draw();
         </script>
