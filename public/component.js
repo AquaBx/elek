@@ -6,7 +6,7 @@ export class App {
     this.app = new PIXI.Application({
       width: width,
       height: height,
-      backgroundColor: 0x3057E1,
+      backgroundColor: 0x3057e1,
     });
     PIXI.BaseTexture.defaultOptions.scaleMode = PIXI.SCALE_MODES.NEAREST;
     PIXI.settings.ROUND_PIXELS = false;
@@ -69,25 +69,24 @@ class Anchor {
   }
 }
 
-export class Resistance {
-  constructor(x, y) {
+export class Component {
+  constructor(x, y, width, height) {
+    this.width = width;
+    this.height = height;
+
     this.content = new PIXI.Graphics();
-
-    this.content.pivot.set(19,5)
-
-    this.content.addChild(PIXI.Sprite.from("./picto/resistance.png"));
+    this.content.pivot.set(this.width / 2, this.height / 2);
     this.content.eventMode = "static";
+    this.content.x = x;
+    this.content.y = y;
 
     this.content.on("pointerdown", () => {
       selected = this;
       pressed = this;
     });
 
-    this.content.x = x;
-    this.content.y = y;
-
-    this.anchor1 = new Anchor(this.content.x - 19, this.content.y);
-    this.anchor2 = new Anchor(this.content.x + 19, this.content.y);
+    this.anchor1 = new Anchor(this.content.x - this.width / 2, this.content.y);
+    this.anchor2 = new Anchor(this.content.x + this.width / 2, this.content.y);
   }
   move(x, y) {
     this.content.x += x / scale;
@@ -95,95 +94,48 @@ export class Resistance {
     this.moveAnchors();
   }
   rotate() {
-    this.content.angle += 45
+    this.content.angle += 45;
     this.moveAnchors();
   }
   draw(scene) {
-    this.anchor1.draw(this.content, scene, 0, 5);
-    this.anchor2.draw(this.content, scene, 38, 5);
+    this.anchor1.draw(this.content, scene, 0, this.height / 2);
+    this.anchor2.draw(this.content, scene, this.width, this.height / 2);
     scene.addChild(this.content);
   }
   moveAnchors() {
-    this.anchor1.move(this.content.x - 19, this.content.y);
-    this.anchor2.move(this.content.x + 19, this.content.y);
+    let t = this.content.angle*Math.PI/180
+    let x1 = this.content.x - Math.cos(t) * this.width / 2
+    let x2 = this.content.x + Math.cos(t) * this.width / 2
+
+    let y1 = this.content.y - Math.sin(t) * this.width / 2
+    let y2 = this.content.y + Math.sin(t) * this.width / 2
+
+    this.anchor1.move(x1, y1);
+    this.anchor2.move(x2, y2);
   }
 }
 
-export class Pile {
-    constructor(x, y) {
-      this.content = new PIXI.Graphics();
-      this.content.addChild(PIXI.Sprite.from("./picto/pile.png"));
-      this.content.pivot.set(19,19)
-      this.content.eventMode = "static";
-  
-      this.content.on("pointerdown", () => {
-        selected = this;
-        pressed = this;
-      });
-  
-      this.content.x = x;
-      this.content.y = y;
-  
-      this.anchor1 = new Anchor(this.content.x - 19, this.content.y);
-      this.anchor2 = new Anchor(this.content.x + 19, this.content.y);
-    }
-    move(x, y) {
-      this.content.x += x / scale;
-      this.content.y += y / scale;
-      this.moveAnchors();
-    }
-    rotate() {
-        this.content.angle += 45
-        this.moveAnchors();
-      }
-    draw(scene) {
-      this.anchor1.draw(this.content, scene, 0, 19);
-      this.anchor2.draw(this.content, scene, 38, 19);
-      scene.addChild(this.content);
-    }
-    moveAnchors() {
-      this.anchor1.move(this.content.x - 19, this.content.y);
-      this.anchor2.move(this.content.x + 19, this.content.y);
-    }
+export class Resistance extends Component {
+  constructor(x, y) {
+    super(x, y, 38, 10);
+    this.content.addChild(PIXI.Sprite.from("./picto/resistance.png"));
   }
+}
 
-  export class Capacitor {
-    constructor(x, y) {
-      this.content = new PIXI.Graphics();
-      this.content.addChild(PIXI.Sprite.from("./picto/capacitor.png"));
-      this.content.pivot.set(11,9)
-      this.content.eventMode = "static";
-  
-      this.content.on("pointerdown", () => {
-        selected = this;
-        pressed = this;
-      });
-  
-      this.content.x = x;
-      this.content.y = y;
-  
-      this.anchor1 = new Anchor(this.content.x - 11, this.content.y);
-      this.anchor2 = new Anchor(this.content.x + 11, this.content.y);
-    }
-    move(x, y) {
-      this.content.x += x / scale;
-      this.content.y += y / scale;
-      this.moveAnchors();
-    }
-    rotate() {
-      this.content.angle += 45
-      this.moveAnchors();
-    }
-    draw(scene) {
-      this.anchor1.draw(this.content, scene, 0, 9);
-      this.anchor2.draw(this.content, scene, 22, 9);
-      scene.addChild(this.content);
-    }
-    moveAnchors() {
-      this.anchor1.move(this.content.x - 11, this.content.y);
-      this.anchor2.move(this.content.x + 11, this.content.y);
-    }
+export class Pile extends Component {
+  constructor(x, y) {
+    super(x, y, 38, 38);
+
+    this.content.addChild(PIXI.Sprite.from("./picto/pile.png"));
   }
+}
+
+export class Capacitor extends Component {
+  constructor(x, y) {
+    super(x, y, 22, 18);
+    this.content.addChild(PIXI.Sprite.from("./picto/capacitor.png"));
+  }
+}
 
 export class Line {
   constructor(anchor1, anchor2) {
@@ -206,10 +158,10 @@ export class Line {
     this.content.eventMode = "static";
 
     this.content.on("mouseover", () => {
-        selected = this;
-        pressed = this;
-        console.log(this)
-      });
+      selected = this;
+      pressed = this;
+      console.log(this);
+    });
   }
   draw(scene) {
     scene.addChild(this.content);
