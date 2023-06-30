@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+    <head>
+        <style>
+            body{
+                margin:0;
+                overflow: hidden;
+            }
+            canvas {
+                image-rendering: pixelated;
+            }
+        </style>
+        <script src="./pixi.min.js"></script>    
+        <script src="./globals.js"></script>    
+    </head>
+    <body>
+        <script type="module">
+            import { Resistance, Pile, Capacitor, Line, App } from './component.js'
+
+            let app = new App()
+            let com1 = new Resistance(0,0)
+            let com2 = new Pile(100,0)
+            let com3 = new Capacitor(100,0)
+            
+            com1.draw(app.scene)
+            com2.draw(app.scene)
+            com3.draw(app.scene)
+
+            app.view.onpointerdown = (e) => {
+                e.preventDefault()
+                switch (e.which ){
+                    case 1: selection = true;break;
+                    case 2: move = app;break;
+                    case 3 : {}
+                }
+            }
+
+            app.view.onpointerup = (e) => {
+                e.preventDefault()
+                move = false
+                selection = false
+            }
+            app.view.onwheel = (e) => {
+                e.preventDefault()
+                scale -= e.deltaY/1000
+                app.zoom(scale)
+            }
+
+            app.view.onpointermove = (e) => {
+                if (move){
+                    move.move(e.movementX,e.movementY)
+                }
+            }
+
+            app.draw();
+        </script>
+    </body>
+</html>
