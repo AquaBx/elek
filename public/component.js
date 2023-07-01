@@ -46,10 +46,7 @@ class Anchor {
   }
 
   draw(scene, appscene, x, y) {
-    let cir = new PIXI.Graphics()
-      .beginFill(0xffffff)
-      .drawCircle(x, y, 2)
-      .endFill();
+    let cir = new PIXI.Graphics().beginFill(0xffffff).drawCircle(x, y, 2).endFill();
 
     cir.on("pointerdown", () => {
       if (anchor_selected == this) {
@@ -69,21 +66,29 @@ class Anchor {
   }
 }
 
-export class Component {
-  constructor(x, y, width, height) {
-    this.width = width;
-    this.height = height;
-
+class Objet {
+  constructor() {
     this.content = new PIXI.Graphics();
-    this.content.pivot.set(this.width / 2, this.height / 2);
     this.content.eventMode = "static";
-    this.content.x = x;
-    this.content.y = y;
 
     this.content.on("pointerdown", () => {
       selected = this;
       pressed = this;
     });
+  }
+}
+
+class Component extends Objet {
+  constructor(x, y, width, height) {
+    super()
+
+    this.width = width;
+    this.height = height;
+
+
+    this.content.pivot.set(this.width / 2, this.height / 2);
+    this.content.x = x;
+    this.content.y = y;
 
     this.anchor1 = new Anchor(this.content.x - this.width / 2, this.content.y);
     this.anchor2 = new Anchor(this.content.x + this.width / 2, this.content.y);
@@ -137,8 +142,10 @@ export class Capacitor extends Component {
   }
 }
 
-export class Line {
+export class Line extends Objet {
   constructor(anchor1, anchor2) {
+    super()
+
     this.anchor1 = anchor1;
     this.anchor2 = anchor2;
 
@@ -149,27 +156,31 @@ export class Line {
       this.move();
     });
 
-    this.content = new PIXI.Graphics();
-    this.content.lineStyle(2, 0x000000);
+    this.content.beginFill(0xffffff);
+    this.content.drawPolygon([
+      this.anchor1.x, this.anchor1.y-1,
+      this.anchor2.x, this.anchor2.y-1,
+      this.anchor2.x, this.anchor2.y+1,
+      this.anchor1.x, this.anchor1.y+1
+    ]);
+    this.content.endFill();
+    
+    this.content.on("pointerdown",(e) => {alert})
 
-    this.content.moveTo(anchor1.x, anchor1.y);
-    this.content.lineTo(anchor2.x, anchor2.y);
-
-    this.content.eventMode = "static";
-
-    this.content.on("mouseover", () => {
-      selected = this;
-      pressed = this;
-      console.log(this);
-    });
   }
   draw(scene) {
     scene.addChild(this.content);
+
   }
   move() {
     this.content.clear();
-    this.content.lineStyle(2, 0x000000);
-    this.content.moveTo(this.anchor1.x, this.anchor1.y);
-    this.content.lineTo(this.anchor2.x, this.anchor2.y);
+    this.content.beginFill(0xffffff);
+    this.content.drawPolygon([
+      this.anchor1.x, this.anchor1.y-1,
+      this.anchor2.x, this.anchor2.y-1,
+      this.anchor2.x, this.anchor2.y+1,
+      this.anchor1.x, this.anchor1.y+1
+    ]);
+    this.content.endFill();
   }
 }
