@@ -85,7 +85,6 @@ class Component extends Objet {
     this.width = width;
     this.height = height;
 
-
     this.content.pivot.set(this.width / 2, this.height / 2);
     this.content.x = x;
     this.content.y = y;
@@ -99,7 +98,7 @@ class Component extends Objet {
     this.moveAnchors();
   }
   rotate() {
-    this.content.angle += 45;
+    this.content.angle = ( this.content.angle + 45 ) % 360
     this.moveAnchors();
   }
   draw(scene) {
@@ -109,6 +108,7 @@ class Component extends Objet {
   }
   moveAnchors() {
     let t = this.content.angle*Math.PI/180
+
     let x1 = this.content.x - Math.cos(t) * this.width / 2
     let x2 = this.content.x + Math.cos(t) * this.width / 2
 
@@ -158,10 +158,10 @@ export class Line extends Objet {
 
     this.content.beginFill(0xffffff);
     this.content.drawPolygon([
-      this.anchor1.x, this.anchor1.y-1,
-      this.anchor2.x, this.anchor2.y-1,
-      this.anchor2.x, this.anchor2.y+1,
-      this.anchor1.x, this.anchor1.y+1
+      this.anchor1.x , this.anchor1.y-1,
+      this.anchor2.x , this.anchor2.y-1,
+      this.anchor2.x , this.anchor2.y+1,
+      this.anchor1.x , this.anchor1.y+1
     ]);
     this.content.endFill();
     
@@ -173,13 +173,19 @@ export class Line extends Objet {
 
   }
   move() {
+
+    let adj = this.anchor2.x-this.anchor1.x
+    let opp = this.anchor2.y-this.anchor1.y
+    let t = Math.atan( opp/adj )
+
+
     this.content.clear();
     this.content.beginFill(0xffffff);
     this.content.drawPolygon([
-      this.anchor1.x, this.anchor1.y-1,
-      this.anchor2.x, this.anchor2.y-1,
-      this.anchor2.x, this.anchor2.y+1,
-      this.anchor1.x, this.anchor1.y+1
+      this.anchor1.x - Math.sin(t), this.anchor1.y+ Math.cos(t),
+      this.anchor2.x - Math.sin(t), this.anchor2.y+ Math.cos(t),
+      this.anchor2.x + Math.sin(t), this.anchor2.y- Math.cos(t),
+      this.anchor1.x + Math.sin(t), this.anchor1.y- Math.cos(t)
     ]);
     this.content.endFill();
   }
