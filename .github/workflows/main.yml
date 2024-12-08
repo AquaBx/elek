@@ -1,6 +1,10 @@
 name: website
 
-on: push
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
 
 permissions:
   contents: read
@@ -14,21 +18,21 @@ jobs:
       -
         name: Checkout
         uses: actions/checkout@v3
-#       -
-#         name: Install Depedencies
-#         run: npm install
-#       -
-#         name: Build App
-#         run: npm run build
-      
+      -
+        name: Install Depedencies
+        run: npm install
+      -
+        name: Build App
+        run: npm run build
+
       - name: Setup Pages
         uses: actions/configure-pages@v2
-        
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
-          path: './public'
-          
+          path: './dist'
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1
